@@ -52,7 +52,19 @@ function genPNG(im){var w=im.w,h=im.h,tw=w+2,th=h+2,c=document.createElement('ca
 function dl(cv,fn){return new Promise(function(rs){cv.toBlob(function(b){var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);setTimeout(rs,100);},'image/png');});}
 function en(n){var d=n.lastIndexOf('.');return(d>0?n.substring(0,d):n)+'.9.png';}
 function expCur(){if(aidx<0){toast('请先选择图片');return;}var im=imgs[aidx];dl(genPNG(im),en(im.name)).then(function(){toast('已导出: '+en(im.name));});}
-function expAll(){if(imgs.length===0){toast('没有图片可导出');return;}po.classList.add('ac');pfl.style.width='0%';function nx(i){if(i>=imgs.length){pfl.style.width='100%';ptx.textContent='完成! 共导出 '+imgs.length+' 张';setTimeout(function(){po.classList.remove('ac');},800);toast('成功导出 '+imgs.length+' 张点九图');return;}ptx.textContent='导出 '+(i+1)+'/'+imgs.length+': '+imgs[i].name;pfl.style.width=((i/imgs.length)*100)+'%';dl(genPNG(imgs[i]),en(imgs[i].name)).then(function(){setTimeout(function(){nx(i+1);},150);});}nx(0);}
+function expAll(){
+if(imgs.length===0){toast('没有图片可导出');return;}
+po.classList.add('ac');pfl.style.width='0%';ptx.textContent='准备中...';
+var doZip=function(){
+var zip=new JSZip(),total=imgs.length,done=0;
+for(var i=0;i<total;i++){(function(idx){
+var im=imgs[idx],c=genPNG(im);
+c.toBlob(function(b){zip.file(en(im.name),b);done++;pfl.style.width=((done/total)*100)+'%';ptx.textContent='打包 '+done+'/'+total;
+if(done===total){zip.generateAsync({type:'blob'}).then(function(zb){var u=URL.createObjectURL(zb),a=document.createElement('a');a.href=u;a.download='点九图导出.zip';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);po.classList.remove('ac');toast('成功导出 '+total+' 张点九图');});}}, 'image/png');
+})(i);}
+};
+if(window.JSZip){doZip();}else{var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';s.onload=doZip;document.head.appendChild(s);}
+}
 $('#bi').addEventListener('click',function(){fi.click();});$('#bif').addEventListener('click',function(){fif.click();});
 fi.addEventListener('change',function(e){addImgs(e.target.files);fi.value='';});fif.addEventListener('change',function(e){addImgs(e.target.files);fif.value='';});
 $('#bcl').addEventListener('click',function(){imgs=[];aidx=-1;render();mc.style.display='none';pc.style.display='none';upEs();});
@@ -68,4 +80,4 @@ dz.addEventListener('dragleave',function(e){if(e.target===dz)dz.classList.remove
 document.addEventListener('drop',function(e){e.preventDefault();dz.classList.remove('ac');if(e.dataTransfer.files.length>0)addImgs(e.dataTransfer.files);});
 cbFull.addEventListener('change',function(){fullPad=cbFull.checked;draw();drawPv();});
 document.addEventListener('keydown',function(e){if(e.ctrlKey&&e.key==='e'){e.preventDefault();expAll();}else if(e.ctrlKey&&e.key==='s'){e.preventDefault();expCur();}else if(e.ctrlKey&&e.key==='o'){e.preventDefault();fi.click();}else if((e.key==='+'||e.key==='=')&&e.ctrlKey){e.preventDefault();zoom=Math.min(zoom*2,32);draw();}else if(e.key==='-'&&e.ctrlKey){e.preventDefault();zoom=Math.max(Math.floor(zoom/2),1);draw();}});
-upEs();})();
+upEs();$('#bea').textContent='导出全部 (.zip)';})();
