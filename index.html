@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>点九图批量制作工具</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+<div class="tb">
+<h1>点九图批量制作</h1>
+<button class="btn pri" id="bi">+ 导入图片</button>
+<button class="btn" id="bif">导入文件夹</button>
+<button class="btn" id="bcl">清空</button>
+<span class="sp"></span>
+<label class="chk"><input type="checkbox" id="cbFull" checked><span>右边/底部铺满</span></label>
+<span class="ct" id="ct">共 0 张</span>
+<button class="btn pri" id="bea">导出全部 (.9.png)</button>
+<button class="btn" id="bec">导出当前</button>
+</div>
+<div class="main">
+<div class="sb">
+<div class="sb-hd">图片列表</div>
+<div class="ilist" id="il"></div>
+</div>
+<div class="ed" id="ed">
+<div class="ed-tb">
+<span class="ml">拖拽上/左边黑色线段调整拉伸区</span>
+<span class="sep"></span>
+<button class="btn" id="bzi">+</button>
+<button class="btn" id="bzo">-</button>
+<button class="btn" id="bzf">适应</button>
+<span class="sp"></span>
+<button class="btn" id="bce">重置为默认</button>
+</div>
+<div class="vp" id="vp">
+<div class="cw" id="cw"><canvas id="mc"></canvas></div>
+<div class="lg">
+<div class="lg-i"><span class="lg-d st"></span>拉伸区 (可拖拽)</div>
+<div class="lg-i"><span class="lg-d pd"></span>内容区</div>
+</div>
+</div>
+</div>
+<div class="pp">
+<div class="pp-hd">拉伸预览</div>
+<div class="pp-bd" id="pb"><canvas id="pc"></canvas></div>
+<div class="pp-ct">
+<label>预览尺寸</label>
+<div class="sr">
+<input type="number" id="pw" value="200" min="10" max="2000">
+<span>x</span>
+<input type="number" id="ph" value="200" min="10" max="2000">
+<button class="btn" id="bpr" style="padding:2px 8px;font-size:10px">重置</button>
+</div>
+</div>
+</div>
+</div>
+<div class="es" id="es" style="position:absolute;inset:0;display:none;pointer-events:none">
+<div class="title">还没有导入图片</div>
+<div class="hint">拖放图片到窗口，或点击导入图片，支持 PNG JPG WebP BMP</div>
+</div>
+</div>
+<div class="do" id="dz"><div class="bx"><div class="txt">释放以导入图片</div></div></div>
+<div class="po" id="po">
+<div class="bx"><div class="txt" id="ptx">正在导出...</div><div class="bar"><div class="fill" id="pfl"></div></div></div>
+</div>
+<div class="toast" id="to"></div>
+<input type="file" id="fi" accept="image/*" multiple style="display:none">
+<input type="file" id="fif" webkitdirectory multiple style="display:none">
+<script src="app.js"></script>
+</body>
+</html>
